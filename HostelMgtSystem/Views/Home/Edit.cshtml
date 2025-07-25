@@ -1,0 +1,97 @@
+﻿@model HostelMgtSystem.Models.RegistrationViewModel
+@{
+    ViewData["Title"] = "Edit Registration";
+    
+    var allRoomsJson = ViewData["AllRoomsJson"] as string ?? "[]";
+}
+
+<div class="container mt-5">
+    <h2>Edit Registration</h2>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <form asp-action="CreateEditRegistration" asp-controller="Home" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group">
+            <label asp-for="UserName">User Name</label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <br />
+
+        <div class="form-group">
+            <label asp-for="SelectedHostelId">Select Hostel</label>
+            <select asp-for="SelectedHostelId" asp-items="Model.HostelOptions" class="form-control" id="hostelSelect">
+                <option value="">-- Select Hostel --</option>
+            </select>
+            <span asp-validation-for="SelectedHostelId" class="text-danger"></span>
+        </div>
+
+        <br />
+
+        <div class="form-group">
+            <label asp-for="SelectedRoomId">Select Room</label>
+            <select asp-for="SelectedRoomId" class="form-control" id="roomSelect">
+                <option value="">-- Select Room (Pending) --</option>
+            </select>
+            <span asp-validation-for="SelectedRoomId" class="text-danger"></span>
+        </div>
+        <br />
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const hostelSelect = document.getElementById('hostelSelect');
+            const roomSelect = document.getElementById('roomSelect');
+           
+            const allRooms = JSON.parse('@Html.Raw(allRoomsJson)');
+
+            
+            function populateRooms() {
+                const selectedHostelId = hostelSelect.value;
+                const currentSelectedRoomId = roomSelect.value;
+
+                // made value null to show empty room number at first
+                roomSelect.innerHTML = '<option value="">-- Select Room (Pending) --</option>';
+
+                if (selectedHostelId) {
+                    // Filter rooms where HostelId matches the selected hostel
+                    const filteredRooms = allRooms.filter(room => room.HostelId == selectedHostelId);
+
+                    filteredRooms.forEach(room => {
+                        const option = document.createElement('option');
+                        option.value = room.Id;
+                        option.textContent = `${room.RoomNumber} (${room.Type}) - ${room.HostelName}`;
+                        roomSelect.appendChild(option);
+                    });
+                }
+
+
+            }
+
+            // Event listener for hostel selection change
+            hostelSelect.addEventListener('change', populateRooms);
+
+             populateRooms();
+
+            const initialSelectedRoomIdFromModel = '@Model.SelectedRoomId';
+            if ('@Model.SelectedRoomId' && Array.from(roomSelect.options).some(opt => opt.value == initialSelectedRoomIdFromModel)) {
+                roomSelect.value = initialSelectedRoomIdFromModel;
+            }
+        });
+    </script>
+}

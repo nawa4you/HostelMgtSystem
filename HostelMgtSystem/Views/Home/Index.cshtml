@@ -1,0 +1,48 @@
+﻿@using System.Security.Claims
+@{
+    ViewData["Title"] = "Hostel Management System";
+    bool isAuthenticated = ViewBag.IsAuthenticated ?? false;
+    bool isAdmin = ViewBag.IsAdmin ?? false;
+    bool hasApprovedRegistration = ViewBag.HasApprovedRegistration ?? false;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Hostel Booking System</h1>
+    <br />
+    <br />
+
+    @if (User.IsInRole("User"))
+
+    {
+
+        @if (!hasApprovedRegistration)
+        {
+            <a asp-controller="Home" asp-action="Saved" class="btn btn-primary">My Registration</a>
+
+
+            <a asp-controller="Home" asp-action="RegisterHostel" class="btn btn-secondary">Book New Room</a>
+        }
+        else
+        {
+            
+            <a asp-area="" asp-controller="Home" asp-action="Saved" class="btn btn-lg btn-info mb-2">My Registration</a>
+        }
+    }
+
+    @if (User.IsInRole("Admin")) {
+
+
+        <div class="container mt-5 text-center">
+            <h1 class="text-primary">Admin Dashboard</h1>
+            <p class="lead">@ViewBag.Message</p>
+            <div class="mt-4">
+                <a asp-controller="Home" asp-action="Saved" class="btn btn-info me-2">View All Registrations</a>
+                <a asp-controller="Home" asp-action="ManageUsers" class="btn btn-primary me-2">Manage Users</a>
+
+            </div>
+        </div>
+
+
+    }
+
+</div>

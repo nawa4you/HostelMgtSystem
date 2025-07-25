@@ -1,0 +1,58 @@
+@model HostelMgtSystem.Models.RegistrationViewModel
+@using System.Security.Claims;
+@{
+    ViewData["Title"] = "Register to a Hostel";
+}
+
+<h2>Register to a Hostel</h2>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+
+<form asp-action="CreateEditRegistration" asp-controller="Home" method="post"> 
+    
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="UserName">Your Name</label>
+        <input asp-for="UserName" class="form-control" readonly="readonly" value="@User.FindFirst(ClaimTypes.Name)?.Value" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+    <br/>
+
+    <div class="form-group">
+        <label asp-for="SelectedHostelId">Select Hostel</label>
+        
+        <select asp-for="SelectedHostelId" asp-items="Model.HostelOptions" class="form-control">
+            <option value="">-- Select Hostel --</option>
+        </select>
+        <span asp-validation-for="SelectedHostelId" class="text-danger"></span>
+    </div>
+
+    <br />
+    <p class="text-info">NOTE: Your room number will be assigned by an administrator after your registration is reviewed.</p>
+
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

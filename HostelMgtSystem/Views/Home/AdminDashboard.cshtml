@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-5 text-center">
+    <h1 class="text-primary">Admin Dashboard</h1>
+    <p class="lead">@ViewBag.Message</p>
+    <div class="mt-4">
+        <a asp-controller="Home" asp-action="Saved" class="btn btn-info me-2">View All Registrations</a>
+        <a asp-controller="Home" asp-action="ManageUsers" class="btn btn-primary me-2">Manage Users</a>
+
+    </div>
+</div>
+
